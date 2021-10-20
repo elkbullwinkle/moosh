@@ -15,9 +15,9 @@ $defaultOptions['global']['tmpfile'] = '/tmp/moosh.tmp';
 $defaultOptions['user']['firstname'] = '%s';
 $defaultOptions['user']['lastname'] = '%s';
 $defaultOptions['user']['password'] = "a";
-$defaultOptions['user']['email'] = "%s@moodle.org";
-$defaultOptions['user']['country'] = 'PL';
-$defaultOptions['user']['city'] = 'Szczecin'; //my home city - why not !? ;)
+$defaultOptions['user']['email'] = "%s@example.com";
+$defaultOptions['user']['country'] = 'NZ';
+$defaultOptions['user']['city'] = 'Wellington'; //my home city - why not !? ;)
 
 $defaultOptions['role']['name'] = '%s';
 $defaultOptions['role']['description'] = '%s';

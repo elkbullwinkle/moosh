@@ -85,7 +85,19 @@ function find_top_moodle_dir($dir) {
  * Returns true if $dir is top-level Moodle directory
  */
 function is_top_moodle_dir($dir) {
-    return file_exists("$dir/config.php") && file_exists("$dir/version.php") && file_exists("$dir/install.php");
+
+    // Checking for top TXP directory
+    if (file_exists("$dir/config.php") && file_exists("$dir/version.php") && is_dir("$dir/server")) {
+        return true;
+    }
+
+    $isTopMoodle = file_exists("$dir/config.php") && file_exists("$dir/version.php") && file_exists("$dir/install.php");
+
+    if ($isTopMoodle && file_exists("${dir}/../changelog.md") && file_exists("${dir}/../config.php")) {
+        return false;
+    }
+
+    return $isTopMoodle;
 }
 
 function home_dir() {
@@ -122,31 +134,34 @@ function array_merge_recursive_distinct(array &$array1, array &$array2) {
  * @return string a branch version (e.g. 23, 24, 25, etc.)
  */
 function moosh_moodle_version($topdir, $default = 23) {
-    if ($topdir && is_dir($topdir) && file_exists($topdir . '/version.php')) {
+    // Hardcoded here suits us
+    return '39';
 
-        // use the branch defined in version.php
-        $lines = file($topdir . '/version.php');
-        foreach ($lines as $line) {
-            //also support 1.9
-            if (strstr($line, "release = '1.9.")) {
-                return '19';
-            }
-            if (strpos($line, "release  = '2.1.") || strpos($line, "release  = '2.1 ")) {
-                return '21';
-            }
-            if (strpos($line, "release  = '2.2.") || strpos($line, "release  = '2.2 ")) {
-                return '22';
-            }
-            $matches = array();
-            if (preg_match('/^\$branch\s+=\s+\'(\d+)\'.*/', $line, $matches)) {
-                return $matches[1];
-            }
-        }
-
-        // If the file was there and we couldn't parse out the branch, there was a problem.
-        throw new Exception("Unable to determine branch version from '$topdir/version.php'");
-    }
-    return $default;
+    // if ($topdir && is_dir($topdir) && file_exists($topdir . '/version.php')) {
+    //
+    //     // use the branch defined in version.php
+    //     $lines = file($topdir . '/version.php');
+    //     foreach ($lines as $line) {
+    //         //also support 1.9
+    //         if (strstr($line, "release = '1.9.")) {
+    //             return '19';
+    //         }
+    //         if (strpos($line, "release  = '2.1.") || strpos($line, "release  = '2.1 ")) {
+    //             return '21';
+    //         }
+    //         if (strpos($line, "release  = '2.2.") || strpos($line, "release  = '2.2 ")) {
+    //             return '22';
+    //         }
+    //         $matches = array();
+    //         if (preg_match('/^\$branch\s+=\s+\'(\d+)\'.*/', $line, $matches)) {
+    //             return $matches[1];
+    //         }
+    //     }
+    //
+    //     // If the file was there and we couldn't parse out the branch, there was a problem.
+    //     throw new Exception("Unable to determine branch version from '$topdir/version.php'");
+    // }
+    // return $default;
 }
 
 function moosh_generate_version_list($upto, $from = 19) {

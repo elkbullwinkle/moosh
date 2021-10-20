@@ -1,4 +1,4 @@
-#!/usr/bin/env php
+#!/usr/bin/env php7.4
 <?php
 /**
  * moosh - Moodle Shell
@@ -55,6 +55,10 @@ if ($app_options->has('moodle-path')) {
     $top_dir = $app_options['moodle-path']->value;
 } else {
     $top_dir = find_top_moodle_dir($cwd);
+
+    if (is_dir("${top_dir}/server")) {
+        $top_dir = "${top_dir}/server";
+    }
 }
 
 if (file_exists($top_dir . '/lib/clilib.php')) {
@@ -71,7 +75,9 @@ if (file_exists($top_dir . '/lib/clilib.php')) {
     }
 }
 
-$moodle_version = moosh_moodle_version($top_dir);
+// Assuming an almost latest version for our use case.
+$moodle_version = '39';
+
 if (isset($app_options['verbose'])) {
     echo "Moodle version detected: $moodle_version\n";
 }
